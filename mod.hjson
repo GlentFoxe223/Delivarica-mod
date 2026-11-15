@@ -1,0 +1,24 @@
+name: Delivarica-mod
+displayName: Delivarica
+description: "
+
+Our first full-fledged mod makes a significant contribution to the expansion of game content by adding a new planet. Despite potential technical errors or flaws. I am sure that this mod will enrich the user's gaming experience. I would appreciate any feedback that will help improve the quality of the mod.
+    
+    [stat]Authors:
+       Sprites -  Splinter  (Split) 
+        Code - iÐupe
+        Maps- Yartera 
+        Music- 深淵
+        
+    [stat]Special Thanks:
+        Bloody Ocean
+        Afarius
+"
+author: '''
+"[coral]Revision [accent]Team [gray]"
+'''
+minGameVersion: 160.7
+version: v0.1
+hidden: false
+main: "MainMod.Delivarica"
+java: true

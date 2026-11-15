@@ -1,0 +1,425 @@
+package MainMod;
+
+import arc.graphics.Color;
+import arc.struct.Seq;
+import mindustry.content.Items;
+import mindustry.content.Liquids;
+import mindustry.content.UnitTypes;
+import mindustry.entities.bullet.BasicBulletType;
+
+import mindustry.entities.part.RegionPart;
+import mindustry.entities.pattern.ShootAlternate;
+import mindustry.gen.Sounds;
+import mindustry.type.Category;
+import mindustry.type.ItemStack;
+import mindustry.type.UnitType;
+import mindustry.world.meta.Attribute;
+import mindustry.world.blocks.defense.turrets.ItemTurret;
+import mindustry.world.draw.DrawTurret;
+
+import mindustry.world.blocks.distribution.BufferedItemBridge;
+import mindustry.world.blocks.distribution.Duct;
+import mindustry.world.blocks.distribution.Junction;
+import mindustry.world.blocks.distribution.OverflowGate;
+import mindustry.world.blocks.distribution.Router;
+import mindustry.world.blocks.distribution.DuctRouter;
+import mindustry.world.blocks.defense.Wall;
+import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.Prop;
+import mindustry.world.blocks.environment.StaticWall;
+import mindustry.world.blocks.environment.SteamVent;
+import mindustry.world.blocks.environment.TallBlock;
+import mindustry.world.blocks.liquid.LiquidRouter;
+import mindustry.world.blocks.payloads.Constructor;
+import mindustry.world.blocks.payloads.PayloadConveyor;
+import mindustry.world.blocks.payloads.PayloadRouter;
+import mindustry.world.blocks.production.Drill;
+import mindustry.world.blocks.storage.CoreBlock;
+import mindustry.world.blocks.units.Reconstructor;
+
+    // РЕГИСТРАЦИЯ
+
+public class DelivaricaBlocks {
+
+    // 1. Рельеф и окружение
+    public static Floor redSand, sandrock, obsidian, rindit, smoothRindit, drangite, whiteIce, letrite, letriteCrush;
+    public static StaticWall sandrockWall, obsidianWall, sandrockWallLarge, obsidianWallLarge, rinditWall, rinditWallLarge, drangiteWall, drangiteWallLarge, whiteIceWall, whiteIceWallLarge, letriteWall, letriteWallLarge;
+    public static TallBlock phosphoriteCubes, neotiteCluster;
+    public static SteamVent obsidianVent;
+    public static Prop obsidianBoulder, rinditBoulder, sandrockBoulder, drangiteBoulder, letriteBoulder;
+
+    // Ядра
+    public static CoreBlock coreReset, coreOff;
+
+    // Стены
+    public static Wall chromiumWall, chromiumWallBig;
+
+    // Буры
+    public static Drill mechanicalDrill;
+
+    // Грузовые конвейеры
+    public static PayloadConveyor inertialFreightConveyor;
+    public static PayloadRouter inertialFreightRouter;
+
+    // Сборщики
+    public static Constructor basicComponentConstructor, basicCargoConstructor;
+    public static Reconstructor basicUnitAmplifier;
+
+    // Предментные
+    public static Duct inertialDuct;
+    public static Junction inertialJunction;
+    public static Router inertialRouter;
+    public static BufferedItemBridge inertialBridge;
+    public static OverflowGate inertialOverflowGate;
+    public static OverflowGate inertialUnderflowGate;
+
+
+
+
+    // Жидкостные
+    public static LiquidRouter liquiTankOne;
+
+    // Турели
+    public static ItemTurret range;
+
+    // Вспомогательный класс для роутера (чтобы убрать "oh no" без ошибок компиляции)
+    public static class InertialDuctRouter extends DuctRouter {
+        public InertialDuctRouter() {
+            super("inertial-router");
+        }
+        @Override
+        public void load() {
+            super.load();
+            // Игра ищет inertial-router-top.png, которого нет.
+            // Принудительно ставим основную текстуру как верхнюю
+            topRegion = region;
+        }
+    }
+
+    // СВОЙСТВА
+
+    public static void load() {
+        // ОКРУЖЕНИЕ
+        redSand = new Floor("redsand-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("6e4535");
+        }};
+
+        sandrock = new Floor("sandrock-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("7d7065");
+        }};
+        sandrockWall = new StaticWall("sandrock-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("7d7065");
+        }};
+        sandrockWallLarge = new StaticWall("sandrock-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("7d7065");
+        }};
+        sandrockBoulder = new Prop("sandrock-boulder"){{
+            variants = 3;
+        }};
+
+        obsidian = new Floor("obsidian-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("2b2b33");
+        }};
+        obsidianWall = new StaticWall("obsidian-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("2b2b33");
+        }};
+        obsidianWallLarge = new StaticWall("obsidian-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("2b2b33");
+        }};
+        obsidianVent = new SteamVent("a-obsidian-vent"){{
+            parent = blendGroup = obsidian;
+            variants = 2;
+            attributes.set(Attribute.steam, 1f);
+            mapColor = Color.valueOf("2b2b33");
+        }};
+        obsidianBoulder = new Prop("obsidian-boulder"){{
+            variants = 2;
+        }};
+
+        rindit = new Floor("rindit-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("5a5d6b");
+        }};
+        smoothRindit = new Floor("smooth-rindit-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("4e505c");
+        }};
+        rinditWall = new StaticWall("rindit-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("5a5d6b");
+        }};
+        rinditWallLarge = new StaticWall("rindit-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("5a5d6b");
+        }};
+        rinditBoulder = new Prop("rindit-boulder"){{
+            variants = 3;
+        }};
+
+        phosphoriteCubes = new TallBlock("phosphorite-cubes"){{
+            variants = 2;
+            clipSize = 128f;
+            solid = true;
+            shadowOffset = -2.5f;
+            mapColor = Color.valueOf("d4d4af");
+        }};
+        neotiteCluster = new TallBlock("neotite-cluster"){{
+            variants = 2;
+            clipSize = 128f;
+            solid = true;
+            shadowOffset = -2.5f;
+            mapColor = Color.valueOf("404552");
+        }};
+
+        drangite = new Floor("drangite-floor"){{
+            variants = 3;
+            mapColor = Color.valueOf("3c3845");
+        }};
+        drangiteWall = new StaticWall("drangite-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("3c3845");
+        }};
+        drangiteWallLarge = new StaticWall("drangite-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("3c3845");
+        }};
+        drangiteBoulder = new Prop("drangite-boulder"){{
+            variants = 3;
+        }};
+
+        whiteIce = new Floor("white-ice-floor"){{
+            variants = 4;
+            mapColor = Color.valueOf("e2eaf0");
+        }};
+        whiteIceWall = new StaticWall("white-ice-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("e2eaf0");
+        }};
+        whiteIceWallLarge = new StaticWall("white-ice-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("e2eaf0");
+        }};
+
+        letrite = new Floor("letrite-floor"){{
+            variants = 4;
+            mapColor = Color.valueOf("5c6963");
+        }};
+        letriteCrush = new Floor("letrite-floor-crush"){{
+            variants = 3;
+            mapColor = Color.valueOf("5c6963");
+        }};
+        letriteWall = new StaticWall("letrite-wall"){{
+            variants = 2;
+            mapColor = Color.valueOf("5c6963");
+        }};
+        letriteWallLarge = new StaticWall("letrite-wall-large"){{
+            variants = 1;
+            mapColor = Color.valueOf("5c6963");
+        }};
+        letriteBoulder = new Prop("letrite-boulder"){{
+            variants = 2;
+        }};
+
+        // ЯДРА
+        coreReset = new CoreBlock("coreReset"){{
+            requirements(Category.effect, ItemStack.with(Items.copper, 1000, Items.lead, 800));
+            alwaysUnlocked = true;
+            isFirstTier = true;
+            unitType = UnitTypes.alpha;
+            health = 4200;
+            itemCapacity = 2000;
+            size = 4;
+            unitCapModifier = 8;
+            drawTeamOverlay = true;
+        }};
+
+        coreOff = new CoreBlock("coreOff"){{
+            requirements(Category.effect, ItemStack.with(Items.copper, 1000, Items.lead, 800));
+            alwaysUnlocked = true;
+            isFirstTier = true;
+            unitType = UnitTypes.alpha;
+            health = 2400;
+            itemCapacity = 1000;
+            size = 3;
+            unitCapModifier = 4;
+            drawTeamOverlay = true;
+        }};
+
+        // СТЕНЫ
+        chromiumWall = new Wall("chromium-wall"){{
+            requirements(Category.defense, ItemStack.with(DelivaricaItems.chromium, 6));
+            health = 600;
+            size = 1;
+        }};
+
+        chromiumWallBig = new Wall("chromium-wall-big"){{
+            requirements(Category.defense, ItemStack.with(DelivaricaItems.chromium, 24));
+            health = 2400;
+            size = 2;
+        }};
+
+        // БУРЫ
+        mechanicalDrill = new Drill("mechanical-drill"){{
+            requirements(Category.production, ItemStack.with(DelivaricaItems.chromium, 12));
+            tier = 2;
+            drillTime = 30;
+            size = 2;
+            drawMineItem = true;
+            consumeLiquid(Liquids.water, 0.05f).boost();
+        }};
+
+        // ГРУЗОВЫЕ КОНВЕЙЕРЫ
+        inertialFreightConveyor = new PayloadConveyor("inertial-freight-conveyor"){{
+            requirements(Category.units, ItemStack.with(DelivaricaItems.chromium, 10));
+            canOverdrive = false;
+            size = 3;
+            moveTime = 45f;
+            payloadLimit = 3f;
+        }};
+
+        inertialFreightRouter = new PayloadRouter("inertial-freight-router"){{
+            requirements(Category.units, ItemStack.with(DelivaricaItems.chromium, 15));
+            canOverdrive = false;
+            size = 3;
+            moveTime = 45f;
+            payloadLimit = 3f;
+        }};
+
+        // СБОРЩИКИ
+        basicComponentConstructor = new Constructor("basic-component-constructor"){{
+            requirements(Category.units, ItemStack.with(DelivaricaItems.chromium, 40));
+            hasPower = true;
+            consumePower(1.5f);
+            size = 3;
+            maxBlockSize = 2;
+            buildSpeed = 0.6f;
+            filter = Seq.with(chromiumWall, chromiumWallBig);
+        }};
+
+        basicCargoConstructor = new Constructor("basic-cargo-constructor"){{
+            requirements(Category.units, ItemStack.with(DelivaricaItems.chromium, 80));
+            hasPower = true;
+            consumePower(3f);
+            size = 3;
+            maxBlockSize = 3;
+            buildSpeed = 0.35f;
+            filter = Seq.with(mechanicalDrill);
+        }};
+
+        basicUnitAmplifier = new Reconstructor("basic-unit-amplifier"){{
+            requirements(Category.units, ItemStack.with(DelivaricaItems.chromium, 80));
+            size = 3;
+            consumePower(2f);
+            consumeItems(ItemStack.with(DelivaricaItems.ramtanium, 20)); // Уточни точное имя поля Рамтана в DelivaricaItems
+            constructTime = 60f * 10f; // 10 секунд на улучшение
+
+            upgrades.addAll(
+                new UnitType[]{DelivaricaUnits.photon, DelivaricaUnits.photonArmored}
+            );
+        }};
+
+        // ПРЕДМЕТНЫЕ
+        inertialJunction = new Junction("inertial-junction"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 4));
+            health = 90;
+            speed = 26f;
+            capacity = 6;
+        }};
+
+        inertialBridge = new BufferedItemBridge("inertial-bridge"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 12));
+            fadeIn = moveArrows = false;
+            health = 90;
+            range = 4;
+            speed = 74f;
+            arrowSpacing = 6f;
+            bufferCapacity = 14;
+            crushFragile = true;
+        }};
+
+        inertialDuct = new Duct("inertial-duct"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 1));
+            health = 90;
+            speed = 4f;
+            junctionReplacement = inertialJunction;
+            bridgeReplacement = inertialBridge;
+        }};
+
+        inertialRouter = new Router("inertial-router"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 4));
+            health = 90;
+            speed = 8f;
+        }};
+
+        inertialOverflowGate = new OverflowGate("inertial-in"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 6));
+            health = 90;
+            speed = 1f;
+        }};
+
+        inertialUnderflowGate = new OverflowGate("inertial-out"){{
+            requirements(Category.distribution, ItemStack.with(DelivaricaItems.chromium, 6));
+            health = 90;
+            speed = 1f;
+            invert = true;
+        }};
+
+
+
+        // ЖИДКОСТНЫЕ
+
+        // ТУРЕЛИ
+        range = new ItemTurret("range"){{
+            requirements(Category.turret, ItemStack.with(
+                DelivaricaItems.chromium, 45
+            ));
+            size = 2;
+            health = 720;
+            range = 190f;
+            reload = 35f;
+            recoil = 1.5f;
+            recoils = 2;
+            rotateSpeed = 6f;
+            shootSound = Sounds.shoot;
+
+            // Поочерёдная стрельба из двух стволов
+            shoot = new ShootAlternate(){{
+                spread = 3.5f;
+            }};
+
+            // Передаём только префикс "delivarica-", игра сама подставит "block-2"
+            drawer = new DrawTurret("delivarica-"){{
+                parts.add(
+                    new RegionPart("-barrel-l"){{
+                        progress = PartProgress.recoil;
+                        under = true; // Чтобы ствол заезжал ПОД корпус турели при отдаче
+                        moveY = -2.5f;
+                        recoilIndex = 0;
+                    }},
+                    new RegionPart("-barrel-r"){{
+                        progress = PartProgress.recoil;
+                        under = true;
+                        moveY = -2.5f;
+                        recoilIndex = 1;
+                    }}
+                );
+            }};
+
+            ammo(
+                DelivaricaItems.chromium, new BasicBulletType(5f, 28){{
+                    width = 9f;
+                    height = 12f;
+                    lifetime = 40f;
+                    ammoMultiplier = 3;
+                }}
+            );
+        }};
+    };
+}
