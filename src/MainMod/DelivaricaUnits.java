@@ -15,11 +15,11 @@ import mindustry.type.UnitType;
 import mindustry.type.Weapon;
 
 public class DelivaricaUnits {
-    public static UnitType side, photon, photonArmored;
+    public static UnitType side, photon, photonArmored, bunch;
 
     public static void load() {
 
-        // Летающий юнит Side
+        // Side
         side = new UnitType("side"){{
             constructor = UnitEntity::create;
             aiController = FlyingAI::new;
@@ -53,7 +53,7 @@ public class DelivaricaUnits {
             }});
         }};
 
-        // Наземный двуногий юнит Photon
+        // Photon
         photon = new UnitType("photon"){{
             constructor = MechUnit::create;
             aiController = GroundAI::new;
@@ -100,13 +100,13 @@ public class DelivaricaUnits {
             }});
         }};
 
-        // Армированный Фотон (свой спрайт photon-armored.png, +200 HP и повышенная броня)
+        // Armored photon
         photonArmored = new UnitType("photon-armored"){{
             constructor = MechUnit::create;
             aiController = GroundAI::new;
 
             flying = false;
-            speed = 0.75f;
+            speed = 0.60f;
             hitSize = 11f;
             health = 620f; // 420 + 200 HP
             armor = 5f;
@@ -118,7 +118,6 @@ public class DelivaricaUnits {
             mechSideSway = 0.35f;
             mechStepParticles = true;
 
-            // Используем те же боковые пушки-крылья, что и у обычного Фотона
             weapons.add(new Weapon(photon.name + "-w"){{
                 reload = 35f;
                 x = 4.5f;
@@ -148,11 +147,52 @@ public class DelivaricaUnits {
             }});
         }};
 
-        // Подставляем ноги, базу и индикатор команды от обычного Фотона, чтобы не плодить копии файлов
         Events.on(ClientLoadEvent.class, e -> {
             photonArmored.legRegion = photon.legRegion;
             photonArmored.baseRegion = photon.baseRegion;
             photonArmored.cellRegion = photon.cellRegion;
         });
+
+        // Bunch
+        bunch = new UnitType("bunch"){{
+            constructor = MechUnit::create;
+            aiController = GroundAI::new;
+
+            flying = false;
+            speed = 0.55f;
+            hitSize = 12f;
+            health = 950f;
+            armor = 6f;
+            rotateSpeed = 3f;
+            outlineColor = Color.valueOf("36363c");
+
+            mechStride = 5.5f;
+            mechFrontSway = 0.3f;
+            mechSideSway = 0.4f;
+            mechStepParticles = true;
+
+            weapons.add(new Weapon(name + "-w"){{
+                reload = 45f;
+                x = 6.5f;
+                y = 0f;
+                top = false;
+                layerOffset = -0.01f;
+                mirror = true;
+                alternate = true;
+                rotate = false;
+                ejectEffect = Fx.casing2;
+
+                bullet = new BasicBulletType(5.5f, 35){{
+                    width = 9f;
+                    height = 12f;
+                    lifetime = 35f;
+                    splashDamageRadius = 16f;
+                    splashDamage = 15f;
+                    hitEffect = Fx.blastExplosion;
+                    backColor = Pal.lightOrange;
+                    frontColor = Color.white;
+                }};
+            }});
+        }};
     }
 }
