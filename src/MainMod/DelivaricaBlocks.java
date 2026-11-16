@@ -17,6 +17,7 @@ import mindustry.world.meta.Attribute;
 import mindustry.world.blocks.defense.turrets.ItemTurret;
 import mindustry.world.draw.DrawTurret;
 
+import mindustry.world.blocks.environment.OreBlock;
 import mindustry.world.blocks.distribution.BufferedItemBridge;
 import mindustry.world.blocks.distribution.Duct;
 import mindustry.world.blocks.distribution.Junction;
@@ -48,6 +49,9 @@ public class DelivaricaBlocks {
     public static SteamVent obsidianVent;
     public static Prop obsidianBoulder, rinditBoulder, sandrockBoulder, drangiteBoulder, letriteBoulder;
 
+    // Руды
+    public static OreBlock oreChromium, oreNickel;
+
     // Ядра
     public static CoreBlock coreReset, coreOff;
 
@@ -73,16 +77,12 @@ public class DelivaricaBlocks {
     public static OverflowGate inertialOverflowGate;
     public static OverflowGate inertialUnderflowGate;
 
-
-
-
     // Жидкостные
     public static LiquidRouter liquiTankOne;
 
     // Турели
     public static ItemTurret range;
 
-    // Вспомогательный класс для роутера (чтобы убрать "oh no" без ошибок компиляции)
     public static class InertialDuctRouter extends DuctRouter {
         public InertialDuctRouter() {
             super("inertial-router");
@@ -90,8 +90,6 @@ public class DelivaricaBlocks {
         @Override
         public void load() {
             super.load();
-            // Игра ищет inertial-router-top.png, которого нет.
-            // Принудительно ставим основную текстуру как верхнюю
             topRegion = region;
         }
     }
@@ -225,6 +223,21 @@ public class DelivaricaBlocks {
         }};
         letriteBoulder = new Prop("letrite-boulder"){{
             variants = 2;
+        }};
+
+        // РУДЫ
+        oreChromium = new OreBlock("chromium-ore", DelivaricaItems.chromium){{
+            variants = 3;
+            oreDefault = true;
+            oreThreshold = 0.81f;
+            oreScale = 23.47f;
+        }};
+
+        oreNickel = new OreBlock("nickel-ore", DelivaricaItems.nickel){{
+            variants = 3;
+            oreDefault = true;
+            oreThreshold = 0.83f;
+            oreScale = 24.5f;
         }};
 
         // ЯДРА
